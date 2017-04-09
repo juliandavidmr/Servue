@@ -1,10 +1,13 @@
+function __serve(ip, port) {
+  console.log(`Running ${ip}:${port}`)
+}
+
 export default function (Vue, options) {
   Vue.api = {}
 
   // 1. add global method or property
-  Vue.serve = function (ip, port) {
-    // something logic ...
-  }
+  Vue.serve = __serve;
+
   // 2. add a global asset
   Vue.directive('my-directive', {
     bind(el, binding, vnode, oldVnode) {
@@ -32,7 +35,5 @@ export default function (Vue, options) {
     }
   })
   // 4. add an instance method
-  Vue.prototype.$myMethod = function (options) {
-    // something logic ...
-  }
+  Vue.prototype.$serve = __serve;
 }
