@@ -13,10 +13,15 @@ var MyVue = new Vue({
     }
   },
   api: {
-    profile: (req, res) => {
-      return req;
+    profile: (req, res, next) => {
+      res.send("Hello, This is a profile");
+    },
+    'get:token': (req, res, next) => {
+      res.send("Token is" + Math.random());
     }
   }
 });
 
-MyVue.$serve('127.0.0.1', 9000);
+MyVue.serve('localhost', 3000, function () {
+  console.log("Listening...")
+});
