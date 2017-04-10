@@ -2,7 +2,7 @@ import constants from './constants';
 import express from 'express'
 
 function __create_routes(_api, app) {
-  if (_api) {
+  if (!!_api) {
     for (var key in _api) {
       if (_api.hasOwnProperty(key)) {
         var func = _api[key];
@@ -48,17 +48,11 @@ function __render(element) {
 
 export default function (Vue, options) {
   Vue.appx = express()
-  Vue.api = {}
+  Vue.socket = undefined;
 
   // 1. add global method or property
   Vue.serve = __serve;
 
-  // 2. add a global asset
-  Vue.directive('my-directive', {
-    bind(el, binding, vnode, oldVnode) {
-      // something logic ...
-    }
-  })
   // 3. inject some component options
   Vue.mixin({
     watch: {
@@ -76,14 +70,21 @@ export default function (Vue, options) {
       },
     },
     created: function () {
-      var _api = this.$options.api;
+      var _api = this.$options.methods;
+      // console.log(_api)
       __create_routes(_api, Vue.appx);
+      __create_socket();
     }
 
   })
   // 4. add an instance method
   Vue.prototype.$serve = __serve;
   Vue.prototype.serve = __serve;
+
+  function __create_socket() {
+    var http = require('http').Server(Vue.appx);
+    Vue.socket = require('socket.io')(http);
+  }
 
   function __serve(ip, port, cb) {
     // Vue.appx.set('port', process.env.PORT || port || 3000);
