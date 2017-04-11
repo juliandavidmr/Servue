@@ -1,6 +1,25 @@
 import * as Vue from 'vue'
-import { } from '../'
+import { VueController, Watch } from '../../'
 
+/**
+ * Server
+ */
+@VueController({
+  prefix: 'user'
+})
+class User {
+
+  info: string = "Julian";
+
+  @Watch("info")
+  vigilante() {
+    console.log("Hello");
+  }
+}
+
+// VueController.server();
+
+/*
 @VueComponent
 class Server {
     @Prop someProp:string;
@@ -22,3 +41,4 @@ class Server {
         console.log('I did stuff');
     }
 }
+*/

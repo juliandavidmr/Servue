@@ -5,14 +5,15 @@ import * as vue from "vue";
 declare var Promise: any;
 
 // Get the HTML layout
-var layout = fs.readFileSync('./index.html', 'utf8')
+// var layout = fs.readFileSync('./views/index.html', 'utf8')
+var layout = '';
 // Create a renderer
-var renderer = require('vue-server-renderer').createRenderer()
+// var renderer = require('vue-server-renderer').createRenderer()
 
 export default (app) => {
   return new Promise((resolve, reject) => {
     // Render our Vue app to a string
-    renderer.renderToString(
+/*    renderer.renderToString(
       // Create an app instance
       app,
       // Handle the rendered result
@@ -28,5 +29,6 @@ export default (app) => {
         }
       }
     )
+    */
   });
 }

@@ -4,9 +4,11 @@
   "description": "A Vue.js project",
   "author": "juliandavidmr <anlijudavid@hotmail.com>",
   "private": false,
-  "main": "lib/index.js",
+  "main": "src/server.js",
   "scripts": {
     "prepublish": "npm run clean && npm run build",
+    "test": "mocha",
+    "dev": "mocha -w",
     "build": "gulp",
     "clean": "rm -rf coverage && rm -rf built && rm -rf lib"
   },

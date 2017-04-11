@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-export default (_api, app: IExpress) => {
+export default (_api, app: IExpress): void => {
   if (!!_api) {
     for (var key in _api) {
       if (_api.hasOwnProperty(key)) {
