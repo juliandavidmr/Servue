@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Servue from '../'
 import fs from 'fs'
 
+import example_render from './component'
+
 Vue.use(Servue);
 
 var MyVue = new Vue({
@@ -22,7 +24,11 @@ var MyVue = new Vue({
       res.sendfile(__dirname + '/index.html');
     },
     profile: (req, res, next) => {
-      res.send("Hello, This is a profile");
+      //res.send("Hello, This is a profile");
+      console.log("Renderer:", new Vue())
+      renderer(example_render).then(html => {
+        res.send(html);
+      })
     },
     'get:token': (req, res, next) => {
       res.send("Token is" + Math.random());

@@ -1,0 +1,17 @@
+{
+    "files": [
+        "src/main.ts"
+    ],
+    "compilerOptions": {
+        "target": "es5",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "module": "commonjs",
+        "removeComments": true,
+        "declaration": true,
+        "experimentalDecorators": true
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}

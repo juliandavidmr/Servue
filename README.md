@@ -1,4 +1,4 @@
-# servue
+# Servue
 
 > A Vue.js project
 
@@ -6,7 +6,6 @@
 - [ ] Reactive Socket
 - [ ] Render templates VueJS
 - [ ] Reactive cookies
-- [ ] Reactive localstorage
 
 ## Usage
 
@@ -26,8 +25,7 @@ var MyVue = new Vue({
   },
   watch: {
     secondname: function (val) {
-      this.socket.emit('tag', this.val)
-      console.log("Object secondname has changed", this.socket, this.$options.socket)
+      console.log("Object secondname has changed", val)
     }
   },
   methods: {
@@ -57,8 +55,5 @@ npm install
 npm run start
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-
-https://alligator.io/vuejs/creating-custom-plugins/
-https://github.com/alexmingoia/koa-router
+License MIT @juliandavidmr
