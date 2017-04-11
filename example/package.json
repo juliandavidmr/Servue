@@ -4,7 +4,7 @@
   "description": "A Vue.js project",
   "author": "juliandavidmr <anlijudavid@hotmail.com>",
   "private": false,
-  "main": "src/server.js",
+  "main": "lib/server.js",
   "scripts": {
     "prepublish": "npm run clean && npm run build",
     "test": "mocha",

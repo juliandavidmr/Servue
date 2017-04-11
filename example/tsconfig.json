@@ -1,6 +1,6 @@
 {
     "files": [
-        "src/main.ts"
+        "src/Server.ts"
     ],
     "indentSize": 2,
     "tabSize": 2,

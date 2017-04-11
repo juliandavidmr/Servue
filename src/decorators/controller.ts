@@ -8,28 +8,30 @@ import { DeveloperUtils } from './decorator.conf'
 export function VueController(element: string)
 export function VueController(options: vuejs.ComponentOption)
 export function VueController(element: string, options: vuejs.ComponentOption)
-export function VueController(first: any, options?: vuejs.ComponentOption) {
-  var type = typeof first;
+export function VueController(first_argv: any, options?: vuejs.ComponentOption) {
+  var type = typeof first_argv;
   if (type == 'function') { //No param decorator, called at construction
-    createDecorator(null, null)(first);
+    createDecorator(null, null)(first_argv);
   } else if (type == 'string') { //name and options or name only
-    return createDecorator(first, options);
+    return createDecorator(first_argv, options);
   } else if (type == 'object') { //options only
-    return createDecorator(null, first);
+    return createDecorator(null, first_argv);
   } else {
     throw Error("First parameter of VueController must be a string or an object");
   }
 }
 
 function camelToSnake(str: string) {
-  var snake = str.replace(/([A-Z])/g, function ($1) { return "-" + $1.toLowerCase(); });
+  var snake = str.replace(/([A-Z])/g, function($1) { return "-" + $1.toLowerCase(); });
   if (snake.charAt(0) == '-') snake = snake.substring(1);
   return snake;
 };
 
 function createDecorator(name?: string, options?: vuejs.ComponentOption) {
+
   DeveloperUtils.decoratorStart();
   return function decorator(target: any) {
+    // console.log("Create decorator: ", target, '\n');
     // save a reference to the original constructor
     var original = target;
 
@@ -40,7 +42,7 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
 
     // a utility function to generate instances of a class
     function construct(constructor, args) {
-      var c: any = function () {
+      var c: any = function() {
         return constructor.apply(this, args);
       }
       c.prototype = constructor.prototype;
@@ -58,7 +60,7 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
         options.data = data_rtn;
       }
     } else options.data = {};
-    
+
     if (options['style']) delete options['style'];
 
     var instance = construct(original, {});
@@ -66,10 +68,9 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
     for (var key in instance) {
       if (key.charAt(0) != '$' && key.charAt(0) != '_') {
         var prop_desc = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(instance), key);
-        
 
         if (prop_desc && prop_desc.get) {
-          console.log("prop desc:", prop_desc);
+          // console.log("prop desc:", prop_desc);
           var computed_obj: any = {};
           if (prop_desc.set) {
             computed_obj.get = prop_desc.get;
@@ -80,7 +81,7 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
           options.computed[key] = computed_obj;
         }
         if (typeof (instance[key]) == 'function') {
-          console.log("function desc:", key, instance[key]);
+          // console.log("function desc:", key, instance[key]);
           if (Config.vueInstanceFunctions.indexOf(key) > -1) {
             options[key] = instance[key]
           } else {
@@ -110,7 +111,9 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
         if (typeof default_val == 'function') options.props[key].type = Function;
         if (typeof default_val == 'object') {
           var copy = clone(default_val, false);
-          default_val = function () { return clone(copy, false); };
+          default_val = function() { 
+            return clone(copy, false); 
+          };
         }
         options.props[key].default = default_val;
       }
@@ -123,15 +126,19 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
     }
 
     var data = options.data;
-    options.data = function () { return clone(data, false) }
-    Vue.component(name, options);
+    options.data = () => {
+      return data;
+    }
+
+    DeveloperUtils.decoratorStop();
+    return options;
 
     // the new constructor behaviour
     // var f:()=>void = function () {
     //     return Vue.component(name);
     // }
     // return f;
-    DeveloperUtils.decoratorStop();
-    return Vue.component(name);
+
+    // return Vue.component(name);
   }
 }

@@ -1,0 +1,5 @@
+export { Get } from './get'
+// export { Post } from './get'
+// export { Put } from './get'
+// export { Head } from './get'
+export { Del } from './del'

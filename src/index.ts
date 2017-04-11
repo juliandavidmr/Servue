@@ -1,4 +1,6 @@
-export * from './servue'
+export { Servue } from './servue'
 export { VueController } from './decorators/controller'
 export { Watch } from './decorators/watch'
+export { Prop } from './decorators/prop'
+export { Del, Get } from './decorators/request/index'
 export { DeveloperUtils } from './decorators/decorator.conf'

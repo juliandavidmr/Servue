@@ -11,12 +11,14 @@ declare global {
 export default (_api, app: IExpress): void => {
   if (!!_api) {
     for (var key in _api) {
+      console.log("Create api for: ", key);
       if (_api.hasOwnProperty(key)) {
         var func = _api[key];
         if (typeof func !== 'function') {
           console.warn(`Invalid param for key ${key}`)
           continue;
         }
+        
         if (key.indexOf(':') !== -1) {
           var elms = key.split(':')
           // console.log("=>>>=>", elms);
