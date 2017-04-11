@@ -1,11 +1,16 @@
 import constants from './constants';
 import express from 'express'
+import http from 'http'
 
 function __create_routes(_api, app) {
   if (!!_api) {
     for (var key in _api) {
       if (_api.hasOwnProperty(key)) {
         var func = _api[key];
+        if (typeof func !== 'function') {
+          console.warn(`Invalid param for key ${key}`)
+          continue;
+        }
         if (key.indexOf(':') !== -1) {
           var elms = key.split(':')
           // console.log("=>>>=>", elms);
@@ -48,12 +53,16 @@ function __render(element) {
 
 export default function (Vue, options) {
   Vue.appx = express()
+  var server = http.createServer(Vue.appx);
+  var io = require('socket.io').listen(server);
+  Vue.prototype.io = io;
+
   Vue.socket = undefined;
 
-  // 1. add global method or property
+  // add global method or property
   Vue.serve = __serve;
 
-  // 3. inject some component options
+  // inject some component options
   Vue.mixin({
     watch: {
       cookies: {
@@ -75,15 +84,13 @@ export default function (Vue, options) {
       __create_routes(_api, Vue.appx);
       __create_socket();
     }
-
   })
-  // 4. add an instance method
+  // add an instance method
   Vue.prototype.$serve = __serve;
   Vue.prototype.serve = __serve;
 
   function __create_socket() {
-    var http = require('http').Server(Vue.appx);
-    Vue.socket = require('socket.io')(http);
+
   }
 
   function __serve(ip, port, cb) {

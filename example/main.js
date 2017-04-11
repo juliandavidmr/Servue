@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Servue from '../'
+import fs from 'fs'
 
 Vue.use(Servue);
 
@@ -12,11 +13,14 @@ var MyVue = new Vue({
   },
   watch: {
     secondname: function (val) {
-      this.socket.emit('tag', this.val)
-      console.log("Object secondname has changed", this.socket, this.$options.socket)
+      this.io.emit('tag', val);
+      console.log("Object secondname has changed", val)
     }
   },
   methods: {
+    '': (req, res, next) => {
+      res.sendfile(__dirname + '/index.html');
+    },
     profile: (req, res, next) => {
       res.send("Hello, This is a profile");
     },
@@ -27,11 +31,10 @@ var MyVue = new Vue({
 });
 
 const port = 3000;
-
 MyVue.serve('localhost', port, function () {
   console.log(`Listening ${port}...`)
 });
 
 setInterval(() => {
   MyVue.secondname = 'Julian';
-}, 1000);
+}, 800);
