@@ -1,0 +1,20 @@
+{
+    "files": [
+        "src/main.ts"
+    ],
+    "indentSize": 2,
+    "tabSize": 2,
+    "compilerOptions": {
+        "target": "es5",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "module": "commonjs",
+        "removeComments": true,
+        "declaration": true,
+        "experimentalDecorators": true,
+        "sourceMap": true
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}
