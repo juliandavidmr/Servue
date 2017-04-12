@@ -1,7 +1,7 @@
 {
   "name": "servue",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "A reactive backend that implements the best of javascript, such as VueJS, SocketIO.",
   "author": "juliandavidmr <anlijudavid@hotmail.com>",
   "private": false,
   "main": "lib/index.js",
@@ -17,6 +17,8 @@
   "keywords": [
     "vue",
     "typescript",
+    "socketio",
+    "controller",
     "server",
     "decorator"
   ],
