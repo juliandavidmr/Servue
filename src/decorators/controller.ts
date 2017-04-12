@@ -1,21 +1,21 @@
-import * as Vue from 'vue';
+import * as Vue from 'vue'
 import * as clone from 'clone'
 
 import Config from './config'
 import { DeveloperUtils } from './decorator.conf'
 
 // var className: string = this.constructor.toString().match(/\w+/g)[1];
-export function VueController(element: string)
+export function VueController(element?: string)
 export function VueController(options: vuejs.ComponentOption)
 export function VueController(element: string, options: vuejs.ComponentOption)
-export function VueController(first: any, options?: vuejs.ComponentOption) {
-  var type = typeof first;
+export function VueController(first_argv: any, options?: vuejs.ComponentOption) {
+  var type = typeof first_argv;
   if (type == 'function') { //No param decorator, called at construction
-    createDecorator(null, null)(first);
+    createDecorator(null, null)(first_argv);
   } else if (type == 'string') { //name and options or name only
-    return createDecorator(first, options);
+    return createDecorator(first_argv, options);
   } else if (type == 'object') { //options only
-    return createDecorator(null, first);
+    return createDecorator(null, first_argv);
   } else {
     throw Error("First parameter of VueController must be a string or an object");
   }
@@ -27,13 +27,39 @@ function camelToSnake(str: string) {
   return snake;
 };
 
+function getPrefix(option: any, className: string) {
+  let prefix_base = ((): string => {
+    if (typeof option === 'string') {
+      return option;
+    } else if (typeof option === 'object') {
+      if (!!option.prefix && typeof option.prefix === 'string') {
+        return option.prefix;
+      }
+      return className;
+    }
+  })()
+  if (prefix_base.trim().startsWith('/')) {
+    return prefix_base.trim();
+  }
+  return `/${prefix_base.trim()}`
+}
+
+function concat(uri1: string, uri2: string) {
+  return `${uri1.startsWith('/') ? uri1.substring(1) : uri1}/${uri2.startsWith('/') ? uri2.substring(1) : uri2}`
+}
+
 function createDecorator(name?: string, options?: vuejs.ComponentOption) {
+
   DeveloperUtils.decoratorStart();
   return function decorator(target: any) {
+    var prefix = '';
+
     // save a reference to the original constructor
     var original = target;
 
     var className = camelToSnake(target.toString().match(/\w+/g)[1]);
+    prefix = getPrefix(options, className);
+    console.log("Prefijo: ", prefix);
 
     if (!options) options = {};
     if (!options.methods) options.methods = {};
@@ -58,7 +84,6 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
         options.data = data_rtn;
       }
     } else options.data = {};
-    
     if (options['style']) delete options['style'];
 
     var instance = construct(original, {});
@@ -66,10 +91,9 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
     for (var key in instance) {
       if (key.charAt(0) != '$' && key.charAt(0) != '_') {
         var prop_desc = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(instance), key);
-        
 
         if (prop_desc && prop_desc.get) {
-          console.log("prop desc:", prop_desc);
+          // console.log("prop desc:", prop_desc);
           var computed_obj: any = {};
           if (prop_desc.set) {
             computed_obj.get = prop_desc.get;
@@ -80,12 +104,12 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
           options.computed[key] = computed_obj;
         }
         if (typeof (instance[key]) == 'function') {
-          console.log("function desc:", key, instance[key]);
+          // console.log("function desc:", key, instance[key]);
           if (Config.vueInstanceFunctions.indexOf(key) > -1) {
             options[key] = instance[key]
           } else {
             if (key != 'constructor')
-              options.methods[key] = instance[key];
+              options.methods[concat(prefix, key)] = instance[key];
           }
         } else {
           options.data[key] = instance[key];
@@ -110,7 +134,9 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
         if (typeof default_val == 'function') options.props[key].type = Function;
         if (typeof default_val == 'object') {
           var copy = clone(default_val, false);
-          default_val = function () { return clone(copy, false); };
+          default_val = function () {
+            return clone(copy, false);
+          };
         }
         options.props[key].default = default_val;
       }
@@ -123,15 +149,11 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
     }
 
     var data = options.data;
-    options.data = function () { return clone(data, false) }
-    Vue.component(name, options);
+    options.data = () => {
+      return data;
+    }
 
-    // the new constructor behaviour
-    // var f:()=>void = function () {
-    //     return Vue.component(name);
-    // }
-    // return f;
     DeveloperUtils.decoratorStop();
-    return Vue.component(name);
+    return options;
   }
 }

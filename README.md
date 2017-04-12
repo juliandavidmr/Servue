@@ -1,46 +1,63 @@
 # Servue
 
-> A Vue.js project
+> A reactive backend that implements the best of javascript, such as VueJS, SocketIO, _and Redux?_
 
 - [x] Routes
+- [x] Reactive controllers
 - [ ] Reactive Socket
 - [ ] Render templates VueJS
-- [ ] Reactive cookies
 
 ## Usage
 
-```js
-import Vue from 'vue'
-import Servue from 'servue'
+**Controller: _UserController.ts_**
+```typescript
+import * as Vue from 'vue'
+import { VueController, Watch, Prop, Get } from '../../'
 
-Vue.use(Servue);
+@VueController({
+  prefix: 'user'
+})
+export default class User extends Vue {
 
+  @Prop info: string = "Julian";
 
-var MyVue = new Vue({
-  name: 'app',
-  data: () => {
-    return {
-      secondname: 'David'
-    }
-  },
-  watch: {
-    secondname: function (val) {
-      console.log("Object secondname has changed", val)
-    }
-  },
-  methods: {
-    profile: (req, res, next) => {
-      res.send("Hello, This is a profile");
-    },
-    'get:token': (req, res, next) => {
-      res.send("Token is" + Math.random());
-    }
+  created() {
+    console.log("User mounted")
   }
+
+  @Watch("info", { deep: true })
+  onInfoChanged(val) {
+    console.log("Value:", val);
+  }
+
+  @Get({
+    path: '/:id'
+  })
+  getList(req: any, res, next) {    
+    console.log("ID :", req.params)
+    res.send("Hello, I am a controller TS")
+  }
+}
+```
+
+**Server: _Server.ts_**
+```typescript
+import * as Vue from 'vue'
+import { Servue } from '../../'
+
+Vue.use(Servue)
+
+import UserController from './UserController'
+
+var server: any = new Vue({
+  mixins: [UserController]
 });
 
-const port = 3000;
+// Test: Activate watch
+server.info = "David" //=> Value: David
 
-MyVue.serve('localhost', port, function () {
+const port = 3000;
+server.serve('localhost', port, function () {
   console.log(`Listening ${port}...`)
 });
 ```
@@ -51,9 +68,13 @@ MyVue.serve('localhost', port, function () {
 # install dependencies
 npm install
 
+# Clean and build
+npm run prebuild
+
 # serve localhost:3000
-npm run start
+npm run prepublish
 ```
 
+### [Changelog](./docs/History.md)
 
-License MIT @juliandavidmr
+License MIT [@juliandavidmr](https://github.com/juliandavidmr)

@@ -8,13 +8,13 @@ import routes from './routes'
 import * as constants from './constants'
 import renderer from './renderer'
 
-export default (Vue, options: Object) => {
+export function Servue(Vue, options: Object) {
   Vue.appx = express()
   var server = http.createServer(Vue.appx);
   Vue.prototype.io = require('socket.io').listen(server);
   
-  console.log("hle", renderer)
-  Vue.prototype.renderer = renderer;
+  // console.log("hle", renderer)
+  // Vue.prototype.renderer = renderer;
 
   // add global method or property: serve
   Vue.serve = __serve;
