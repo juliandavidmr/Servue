@@ -1,5 +1,4 @@
 import { DeveloperUtils } from '../decorator.conf'
-import concat from './_concat'
 
 export function Get(target: any)
 export function Get(first: any, second?: string) {

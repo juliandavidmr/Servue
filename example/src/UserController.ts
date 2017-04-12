@@ -5,7 +5,7 @@ import { VueController, Watch, Prop, Get } from '../../'
  * Server
  */
 @VueController({
-  prefix: 'user'
+  prefix: 'usercontroller'
 })
 export default class User extends Vue {
 
@@ -23,8 +23,14 @@ export default class User extends Vue {
   @Get({
     path: '/:id'
   })
-  getList(req: any, res, next) {    
+  getData(req: any, res, next) {
     console.log("ID :", req.params)
     res.send("Hello, I am a controller TS")
+  }
+
+  @Get('list')
+  getList(req: any, res, next) {
+    console.log("ID :", req.params)
+    res.json([{ name: 'David' }])
   }
 }
