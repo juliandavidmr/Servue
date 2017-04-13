@@ -12,7 +12,7 @@ export function Servue(Vue, options: Object) {
   Vue.appx = express()
   var server = http.createServer(Vue.appx);
   Vue.prototype.io = require('socket.io').listen(server);
-  
+
   // console.log("hle", renderer)
   // Vue.prototype.renderer = renderer;
 

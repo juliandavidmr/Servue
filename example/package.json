@@ -7,10 +7,9 @@
   "main": "lib/server.js",
   "scripts": {
     "prepublish": "npm run clean && npm run build",
-    "test": "mocha",
-    "dev": "mocha -w",
     "build": "gulp",
-    "clean": "rm -rf coverage && rm -rf built && rm -rf lib"
+    "clean": "rm -rf build",
+    "start": "node start"
   },
   "repository": {
     "type": "git",

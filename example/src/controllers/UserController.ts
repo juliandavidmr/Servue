@@ -1,5 +1,5 @@
 import * as Vue from 'vue'
-import { VueController, Watch, Prop, Get } from '../../'
+import { VueController, Watch, Prop, Get } from '../../../'
 
 /**
  * Server
@@ -7,7 +7,7 @@ import { VueController, Watch, Prop, Get } from '../../'
 @VueController({
   prefix: 'usercontroller'
 })
-export default class User extends Vue {
+export class User extends Vue {
 
   @Prop info: string = "Julian";
 
@@ -21,7 +21,7 @@ export default class User extends Vue {
   }
 
   @Get({
-    path: '/:id'
+    path: ':id'
   })
   getData(req: any, res, next) {
     console.log("ID :", req.params)
@@ -32,5 +32,13 @@ export default class User extends Vue {
   getList(req: any, res, next) {
     console.log("ID :", req.params)
     res.json([{ name: 'David' }])
+  }
+
+  @Get({
+    path: ':data',
+  })
+  getInfo(req: any, res, next, data) {
+    console.log("ID :", req.params)
+    res.send("Hello, I am a controller TS")
   }
 }

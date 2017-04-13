@@ -15,13 +15,13 @@ export default (_api, app: IExpress): void => {
     for (var key in _api) {
       // console.log("Create api for: ", key, _api[key]);
       // if (_api.hasOwnProperty(key)) { // TODO: Validate this condition
-      var func = _api[key];
+      var func = _api[key];      
 
       if (key.indexOf(':') !== -1) {
-        var elms = key.split(':')
-        console.log("=>>>=>", elms);
-        var request_type = elms[0].toLowerCase();
-        var request_uri = elms[1].startsWith('/') ? elms[1] : `/${elms[1]}`;
+        var elms = ''
+        var request_type = key.substring(0, key.indexOf(':'));
+        var request_uri =  key.substring(key.indexOf(':'), key.length);
+        // console.log("=>>>=>", elms);              
 
         switch (request_type) {
           case 'get':

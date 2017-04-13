@@ -1,7 +1,8 @@
 import * as Vue from 'vue'
 import * as clone from 'clone'
 
-import Config from './config'
+import Config from './_config'
+import concat from '../utils/concat'
 import { DeveloperUtils } from './decorator.conf'
 
 // var className: string = this.constructor.toString().match(/\w+/g)[1];
@@ -42,10 +43,6 @@ function getPrefix(option: any, className: string) {
     return prefix_base.trim();
   }
   return `/${prefix_base.trim()}`
-}
-
-function concat(uri1: string, uri2: string) {
-  return `${uri1.startsWith('/') ? uri1.substring(1) : uri1}/${uri2.startsWith('/') ? uri2.substring(1) : uri2}`
 }
 
 function createDecorator(name?: string, options?: vuejs.ComponentOption) {
