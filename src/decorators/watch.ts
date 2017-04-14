@@ -23,7 +23,6 @@ export function Watch(name: string, options?: WatchOption) {
     target.$$watch[watched] = options;
 
     // delete target[key]
-
     DeveloperUtils.decoratorStop();
   }
 }

@@ -37,7 +37,7 @@ export class User extends Vue {
   @Get({
     path: ':data',
   })
-  getInfo(req: any, res, next, data) {
+  getInfo(req: any, res, next) {
     console.log("ID :", req.params)
     res.send("Hello, I am a controller TS")
   }

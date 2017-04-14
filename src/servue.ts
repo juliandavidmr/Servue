@@ -3,9 +3,9 @@
 
 import * as express from 'express'
 import * as http from 'http'
+import { uniqueObject } from './utils/concat';
 
 import routes from './routes'
-import * as constants from './constants'
 import renderer from './renderer'
 
 export function Servue(Vue, options: Object) {
@@ -13,32 +13,17 @@ export function Servue(Vue, options: Object) {
   var server = http.createServer(Vue.appx);
   Vue.prototype.io = require('socket.io').listen(server);
 
-  // console.log("hle", renderer)
-  // Vue.prototype.renderer = renderer;
-
   // add global method or property: serve
   Vue.serve = __serve;
 
   // inject some component options
   Vue.mixin({
-    watch: {
-      cookies: {
-        // getter
-        get: () => {
-          console.log("*")
-          return Object.keys(this.cookies)
-        },
-        // setter
-        set: (newValue) => {
-          const val = newValue;
-          return `=> ${val}`;
-        },
-      },
-    },
     created: function () {
-      var _api = this.$options.methods;
-      // console.log(_api)
-      routes(_api, Vue.appx);
+      let _mixins = [];
+      for (var key in this.$options.mixins) {
+        _mixins.push(this.$options.mixins[key]['methods']);
+      }
+      routes(uniqueObject(_mixins), Vue.appx);
     }
   })
   // add an instance method

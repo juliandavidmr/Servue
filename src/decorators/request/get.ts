@@ -1,4 +1,4 @@
-import { DeveloperUtils } from '../decorator.conf'
+import * as classifier from "../../constants/request_classifier";
 
 export function Get(target: any)
 export function Get(first: any, second?: string) {
@@ -9,13 +9,21 @@ export function Get(first: any, second?: string) {
 }
 
 function propDecorator(options?: any) {
-  return function(target: any, key: string) {
-    DeveloperUtils.decoratorStart();
+
+  function getPrefix(key, options): string {
+    if (typeof options === 'string') {
+      return options;
+    }
+    if (typeof options === 'object' && !!options['path']) {
+      return options['path']
+    }
+    return key;
+  }
+
+  return function (target: any, key: string) {
     if (!target.$$methods) target.$$methods = {};
     
-    // console.log('Target::', target, key, options);
-    
-    target.$$methods[key] = target[key];
-    DeveloperUtils.decoratorStop();
+    target.$$methods[`${classifier.TYPES.GET}${classifier.SEPARATOR}${getPrefix(key, options)}`] = target[key];
+    return target;
   }
 }

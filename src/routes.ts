@@ -1,6 +1,7 @@
 ///<reference path="../typings/globals/node/index.d.ts"/>
 
 import { IExpress } from "./interfaces/express";
+import * as cf from './constants/request_classifier';
 
 declare global {
   interface String {
@@ -13,10 +14,18 @@ export default (_api, app: IExpress): void => {
 
   if (!!_api) {
     for (var key in _api) {
-      // console.log("Create api for: ", key, _api[key]);
-      // if (_api.hasOwnProperty(key)) { // TODO: Validate this condition
-      var func = _api[key];      
 
+      var func = _api[key];
+      switch (cf.classifier(key)) {
+        case cf.TYPES.GET:
+          console.log("Listen ", cf.clean(key));          
+          app.get(key, func)
+          break;
+        default:
+          break;
+      }
+
+      /*
       if (key.indexOf(':') !== -1) {
         var elms = ''
         var request_type = key.substring(0, key.indexOf(':'));
@@ -50,8 +59,7 @@ export default (_api, app: IExpress): void => {
         console.log("Hola:", `/${key}`);
 
         app.get(`/${key}`, func)
-      }
+      }*/
     }
   }
-  // }
 }

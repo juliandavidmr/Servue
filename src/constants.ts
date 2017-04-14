@@ -1,6 +1,0 @@
-export const POST = 'POST_REQUEST'
-export const GET = 'GET_REQUEST'
-export const PUT = 'PUT_REQUEST'
-export const HEAD = 'HEAD_REQUEST'
-export const DELETE = 'DELETE_REQUEST'
-export const ALL = 'ALL_REQUEST'

@@ -11,6 +11,9 @@
 
 # Changelog
 
+### 2017-04-13
+- **[Feature]** Add `Module` decorator. Create `Server` function [See commit →](https://github.com/juliandavidmr/Servue/commit/b4e8ba08317f072492c428571f75d09d4c42b152)
+
 ### 2017-04-12
 - **[Fixes]** Fix url controller path prefix [See commit →](https://github.com/juliandavidmr/Servue/commit/1028f673c46d7e6941eeda2abd412d79e663bf4e)
 

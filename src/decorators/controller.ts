@@ -3,12 +3,12 @@ import * as clone from 'clone'
 
 import Config from './_config'
 import concat from '../utils/concat'
-import { DeveloperUtils } from './decorator.conf'
+import * as cf from "../constants/request_classifier";
 
-// var className: string = this.constructor.toString().match(/\w+/g)[1];
-export function VueController(element?: string)
+declare type ClassDecorator = <TFunction extends Function>(target: TFunction) => TFunction | void;
+
+export function VueController(options?: string)
 export function VueController(options: vuejs.ComponentOption)
-export function VueController(element: string, options: vuejs.ComponentOption)
 export function VueController(first_argv: any, options?: vuejs.ComponentOption) {
   var type = typeof first_argv;
   if (type == 'function') { //No param decorator, called at construction
@@ -46,17 +46,16 @@ function getPrefix(option: any, className: string) {
 }
 
 function createDecorator(name?: string, options?: vuejs.ComponentOption) {
-
-  DeveloperUtils.decoratorStart();
   return function decorator(target: any) {
+    // console.log("Proto: ", arguments[0].prototype);    
     var prefix = '';
+    let methods = Object.getOwnPropertyDescriptor(arguments[0].prototype, "$$methods")["value"];
 
     // save a reference to the original constructor
     var original = target;
 
     var className = camelToSnake(target.toString().match(/\w+/g)[1]);
     prefix = getPrefix(options, className);
-    console.log("Prefijo: ", prefix);
 
     if (!options) options = {};
     if (!options.methods) options.methods = {};
@@ -104,9 +103,6 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
           // console.log("function desc:", key, instance[key]);
           if (Config.vueInstanceFunctions.indexOf(key) > -1) {
             options[key] = instance[key]
-          } else {
-            if (key != 'constructor')
-              options.methods[concat(prefix, key)] = instance[key];
           }
         } else {
           options.data[key] = instance[key];
@@ -118,6 +114,7 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
       } else if (key == "$$watch") {
         for (var watch in instance.$$watch) {
           options.watch[watch] = instance.$$watch[watch];
+          delete options.methods[watch]
         }
       }
     }
@@ -150,7 +147,16 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
       return data;
     }
 
-    DeveloperUtils.decoratorStop();
+    for (var key in methods) {
+      if (methods.hasOwnProperty(key)) {
+        var func = methods[key];       
+        let route = cf.addNameController(prefix, key);
+        // console.log('route', route);
+        
+        options.methods[route] = func;
+      }
+    }
+
     return options;
   }
 }
