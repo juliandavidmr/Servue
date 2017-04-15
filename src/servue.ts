@@ -1,12 +1,20 @@
 ///<reference path="../typings/globals/node/index.d.ts"/>
 ///<reference path="../typings/globals/vue/index.d.ts"/>
 
+import { IExpress } from "./interfaces/express";
+
 import * as express from 'express'
 import * as http from 'http'
 import { uniqueObject } from './utils/concat';
 
 import routes from './routes'
 import renderer from './renderer'
+
+declare global {
+  interface String {
+    startsWith(String): boolean;
+  }
+}
 
 export function Servue(Vue, options: Object) {
   Vue.appx = express()
@@ -23,7 +31,8 @@ export function Servue(Vue, options: Object) {
       for (var key in this.$options.mixins) {
         _mixins.push(this.$options.mixins[key]['methods']);
       }
-      routes(uniqueObject(_mixins), Vue.appx);
+      var router = express.Router()
+      Vue.appx.use('/', routes(uniqueObject(_mixins), router));
     }
   })
   // add an instance method

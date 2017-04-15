@@ -1,7 +1,8 @@
-import { DeveloperUtils } from '../decorator.conf'
+import * as classifier from "../../constants/request_classifier";
+import { getPrefix } from "./_prefix";
 
-export function Head(target: any)
-export function Head(first: any, second?: string) {
+export function Get(target: any)
+export function Get(first: any, second?: string) {
   //Bare decorator (no params)
   if (second) propDecorator(null)(first, second);
   //Decorator with params
@@ -9,13 +10,11 @@ export function Head(first: any, second?: string) {
 }
 
 function propDecorator(options?: any) {
-  return function(target: any, key: string) {
-    DeveloperUtils.decoratorStart();
-    if (!target.$$methods) target.$$methods = {};
 
-    // console.log('Target::', target, key, options);
+  return function (target: any, key: string) {
+    if (!target.$$methods) target.$$methods = {};
     
-    target.$$methods[key] = target[key];
-    DeveloperUtils.decoratorStop();
+    target.$$methods[`${classifier.TYPES.HEAD}${classifier.SEPARATOR}${getPrefix(key, options)}`] = target[key];
+    return target;
   }
 }

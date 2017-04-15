@@ -1,4 +1,5 @@
 import * as classifier from "../../constants/request_classifier";
+import { getPrefix } from "./_prefix";
 
 export function Get(target: any)
 export function Get(first: any, second?: string) {
@@ -9,16 +10,6 @@ export function Get(first: any, second?: string) {
 }
 
 function propDecorator(options?: any) {
-
-  function getPrefix(key, options): string {
-    if (typeof options === 'string') {
-      return options;
-    }
-    if (typeof options === 'object' && !!options['path']) {
-      return options['path']
-    }
-    return key;
-  }
 
   return function (target: any, key: string) {
     if (!target.$$methods) target.$$methods = {};

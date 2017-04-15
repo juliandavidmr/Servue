@@ -8,8 +8,12 @@
   - Private
   - Anonymous
 - Implement redux (or vuex?) to control states in the socket.
+- Injection dependencies, modules, middlewares.
 
 # Changelog
+
+### 2017-04-13
+- **[Fixes]** Fixes decorators Post, Put, Head, Delete [See commit →](https://github.com/juliandavidmr/Servue)
 
 ### 2017-04-13
 - **[Feature]** Add `Module` decorator. Create `Server` function [See commit →](https://github.com/juliandavidmr/Servue/commit/b4e8ba08317f072492c428571f75d09d4c42b152)

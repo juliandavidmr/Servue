@@ -1,5 +1,5 @@
 import * as Vue from 'vue'
-import { VueController, Watch, Prop, Get } from '../../../'
+import { VueController, Watch, Prop, Get, Del, Post, Put, Head } from '../../../'
 
 /**
  * Server
@@ -21,24 +21,30 @@ export class User extends Vue {
   }
 
   @Get({
-    path: ':id'
+    path: '/data/:id'
   })
   getData(req: any, res, next) {
     console.log("ID :", req.params)
-    res.send("Hello, I am a controller TS")
+    return res.send("Hello, I am a controller TS")
   }
 
   @Get('list')
   getList(req: any, res, next) {
     console.log("ID :", req.params)
-    res.json([{ name: 'David' }])
+    return res.json([{ name: 'David' }])
   }
 
   @Get({
-    path: ':data',
+    path: '/info/:data',
   })
   getInfo(req: any, res, next) {
     console.log("ID :", req.params)
-    res.send("Hello, I am a controller TS")
+    return res.send("Hello, I am a controller TS")
+  }
+
+  @Post({})
+  getPost(req: any, res, next) {
+    console.log("ID :", req.params)
+    return res.send("Request Post :)")
   }
 }
