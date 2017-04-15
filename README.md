@@ -4,6 +4,7 @@
 
 - [x] Routes
 - [x] Reactive controllers
+- [x] Middlewares
 - [ ] Reactive Socket
 - [ ] Render templates VueJS
 
@@ -25,13 +26,22 @@ import { Module } from '../../../'
 import { Pet } from "../controllers/PetController";
 import { User } from "../controllers/UserController";
 
+function middleware(req, res, next) {
+  console.log("Middleware executed");
+  next();
+}
+
 @Module({
   controllers: [
     Pet,
     User
+  ],
+  use: [],
+  middlewares: [
+    middleware
   ]
 })
-export class Main {}
+export class Main { }
 ```
 
 **Module: _PetController.ts_**
@@ -72,25 +82,31 @@ export class User extends Vue {
   }
 
   @Get({
-    path: ':id'
+    path: '/data/:id'
   })
   getData(req: any, res, next) {
     console.log("ID :", req.params)
-    res.send("Hello, I am a controller TS")
+    return res.send("Hello, I am a controller TS")
   }
 
   @Get('list')
   getList(req: any, res, next) {
     console.log("ID :", req.params)
-    res.json([{ name: 'David' }])
+    return res.json([{ name: 'David' }])
   }
 
   @Get({
-    path: ':data',
+    path: '/info/:data',
   })
-  getInfo(req: any, res, next, data) {
+  getInfo(req: any, res, next) {
     console.log("ID :", req.params)
-    res.send("Hello, I am a controller TS")
+    return res.send("Hello, I am a controller TS")
+  }
+
+  @Post({})
+  getPost(req: any, res, next) {
+    console.log("ID :", req.params)
+    return res.send("Request Post :)")
   }
 }
 ```

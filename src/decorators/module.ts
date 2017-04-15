@@ -15,8 +15,8 @@ function propDecorator(options?: any) {
         throw Error("controllers parameter 'Module' must be an valid object");
       }
     } else throw Error("Fist parameter 'Module' must be an object");
-
-    delete target[key]; // Todo: validate this line
-    return options['controllers'];
+    
+    // delete target[key]; // Todo: validate this line
+    return options;
   }
 }

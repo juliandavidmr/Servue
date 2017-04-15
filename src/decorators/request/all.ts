@@ -1,8 +1,8 @@
 import * as classifier from "../../constants/request_classifier";
 import { getPrefix } from "./_prefix";
 
-export function Get(target: any)
-export function Get(first: any, second?: string) {
+export function All(target: any)
+export function All(first: any, second?: string) {
   //Bare decorator (no params)
   if (second) propDecorator(null)(first, second);
   //Decorator with params

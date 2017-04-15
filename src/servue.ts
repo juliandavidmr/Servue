@@ -16,10 +16,20 @@ declare global {
   }
 }
 
+var app = express()
+
+function inject(dependencies: any[]) {
+  dependencies.map(dep => {
+    app.use(dep);
+  })
+}
+
 export function Servue(Vue, options: Object) {
-  Vue.appx = express()
+  let middlewares = options['middlewares'];
+  inject(middlewares);
+  
+  Vue.appx = app
   var server = http.createServer(Vue.appx);
-  Vue.prototype.io = require('socket.io').listen(server);
 
   // add global method or property: serve
   Vue.serve = __serve;
@@ -33,6 +43,9 @@ export function Servue(Vue, options: Object) {
       }
       var router = express.Router()
       Vue.appx.use('/', routes(uniqueObject(_mixins), router));
+    },
+    methods: {
+      io: require('socket.io').listen(server)
     }
   })
   // add an instance method

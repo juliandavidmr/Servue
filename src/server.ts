@@ -2,11 +2,16 @@ import * as Vue from 'vue'
 import { Servue } from './servue'
 import { IServer } from "./interfaces/IServer";
 
-Vue.use(Servue)
+// Vue.use(Servue)
 
-export function Server(controllers: any[] | any): IServer & vuejs.Vue {
+export function Server(options: any): IServer & vuejs.Vue {
+  // console.log("Opciones dos:", options);
+  let _controllers = options['controllers']; // The mixins: controllers  
+
+  Vue.use(Servue, options);
+
   var server: any = new Vue({
-    mixins: controllers
+    mixins: _controllers
   });
 
   return server;
