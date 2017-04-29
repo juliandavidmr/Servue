@@ -1,11 +1,7 @@
-import { DeveloperUtils } from './decorator.conf'
-
 export function Watch(name: string)
 export function Watch(name: string, options: WatchOption)
 export function Watch(name: string, options?: WatchOption) {
   return function (target: any, key: string) {
-    DeveloperUtils.decoratorStart();
-
     if (!target.$$watch) target.$$watch = {};
 
     var watched = target[key] ? name : key;
@@ -23,7 +19,6 @@ export function Watch(name: string, options?: WatchOption) {
     target.$$watch[watched] = options;
 
     // delete target[key]
-    DeveloperUtils.decoratorStop();
   }
 }
 

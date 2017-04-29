@@ -1,6 +1,6 @@
 {
   "files": [
-    "src/main.ts"
+    "core/main.ts"
   ],
   "indentSize": 2,
   "tabSize": 2,
@@ -16,6 +16,6 @@
     "sourceMap": true
   },
   "include": [
-    "./src/**/*"
+    "./core/**/*"
   ]
 }

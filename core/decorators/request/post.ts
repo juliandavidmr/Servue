@@ -1,5 +1,6 @@
 import * as classifier from "../../constants/request_classifier";
 import { getPrefix } from "./_prefix";
+import { ITarget } from "../../interfaces/ITarget";
 
 export function Post(target: any)
 export function Post(first: any, second?: string) {
@@ -11,10 +12,16 @@ export function Post(first: any, second?: string) {
 
 function propDecorator(options?: any) {
 
-  return function (target: any, key: string) {
-    if (!target.$$methods) target.$$methods = {};
-    
-    target.$$methods[`${classifier.TYPES.POST}${classifier.SEPARATOR}${getPrefix(key, options)}`] = target[key];
+  return function (target: ITarget, key: string) {
+    if (!target.$$methods) target.$$methods = [];
+
+    target.$$methods.push({
+      type: classifier.TYPES.POST,
+      name: getPrefix(key, options),
+      func: target[key]
+    })
+
+    // target.$$methods[`${classifier.TYPES.POST}${classifier.SEPARATOR}${getPrefix(key, options)}`] = target[key];
     return target;
   }
 }

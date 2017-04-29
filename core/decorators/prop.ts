@@ -1,5 +1,3 @@
-import { DeveloperUtils } from './decorator.conf'
-
 export function Prop(options: vuejs.PropOption) //With options
 export function Prop(target: Object, key: string)
 export function Prop(first: any, second?: string) {
@@ -11,7 +9,6 @@ export function Prop(first: any, second?: string) {
 
 function propDecorator(options?: any) {
   return function(target: any, key: string) {
-    DeveloperUtils.decoratorStart();
     //create the temp props holder if non existane
     if (!target.$$props) target.$$props = {};
 
@@ -20,7 +17,5 @@ function propDecorator(options?: any) {
     target.$$props[key] = options;
     //remove it from the instance so it is not added to data
     delete target[key];
-
-    DeveloperUtils.decoratorStop();
   }
 }

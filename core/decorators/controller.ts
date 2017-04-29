@@ -2,8 +2,8 @@ import * as Vue from 'vue'
 import * as clone from 'clone'
 
 import Config from './_config'
-import concat from '../utils/concat'
 import * as cf from "../constants/request_classifier";
+import { ITarget } from "../interfaces/ITarget";
 
 declare type ClassDecorator = <TFunction extends Function>(target: TFunction) => TFunction | void;
 
@@ -49,7 +49,11 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
   return function decorator(target: any) {
     // console.log("Proto: ", arguments[0].prototype);    
     var prefix = '';
-    let methods = Object.getOwnPropertyDescriptor(arguments[0].prototype, "$$methods")["value"];
+    let methods: Array<{ type: string, name: string, func: Function }> = Object.getOwnPropertyDescriptor(arguments[0].prototype, "$$methods")["value"];
+
+    console.log("Metodos=>", methods);
+
+
 
     // save a reference to the original constructor
     var original = target;
@@ -147,15 +151,12 @@ function createDecorator(name?: string, options?: vuejs.ComponentOption) {
       return data;
     }
 
-    for (var key in methods) {
-      if (methods.hasOwnProperty(key)) {
-        var func = methods[key];       
-        let route = cf.addNameController(prefix, key);
-        // console.log('route', route);
-        
-        options.methods[route] = func;
-      }
-    }
+    methods.map(it => {
+      let route = cf.concatUrl([prefix, it.name]);
+      // console.log('route added:', route);
+      options.methods[it.type +  cf.SEPARATOR + route] = it.func;
+    })
+    // options.$$methods = methods;
 
     return options;
   }

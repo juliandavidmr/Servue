@@ -12,7 +12,7 @@ export class Pet extends Vue {
 
   @Get('list')
   getList(req: any, res, next) {
-    console.log("ID :", req.params)
+    console.log("Listado de pets:", req.params)
     res.json([{ name: 'David' }])
   }
 }

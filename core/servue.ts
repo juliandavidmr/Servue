@@ -5,10 +5,8 @@ import { IExpress } from "./interfaces/express";
 
 import * as express from 'express'
 import * as http from 'http'
-import { uniqueObject } from './utils/concat';
 
 import routes from './routes'
-import renderer from './renderer'
 
 declare global {
   interface String {
@@ -18,7 +16,7 @@ declare global {
 
 var app = express()
 
-function inject(dependencies: any[]) {
+function _use_module_express(dependencies: Array<any>) {
   dependencies.map(dep => {
     app.use(dep);
   })
@@ -26,8 +24,8 @@ function inject(dependencies: any[]) {
 
 export function Servue(Vue, options: Object) {
   let middlewares = options['middlewares'];
-  inject(middlewares);
-  
+  _use_module_express(middlewares);
+
   Vue.appx = app
   var server = http.createServer(Vue.appx);
 
@@ -41,8 +39,17 @@ export function Servue(Vue, options: Object) {
       for (var key in this.$options.mixins) {
         _mixins.push(this.$options.mixins[key]['methods']);
       }
+      // console.log("Mixins:", this.$options.mixins);
+
       var router = express.Router()
-      Vue.appx.use('/', routes(uniqueObject(_mixins), router));
+      var objs: Object = uniqueObject(_mixins)
+
+      for (var key in objs) {
+        objs[key].bind(this);
+      }
+
+      Vue.appx.locals = this;
+      Vue.appx.use('/', routes(objs, router));
     },
     methods: {
       io: require('socket.io').listen(server)
@@ -55,4 +62,18 @@ export function Servue(Vue, options: Object) {
     // Vue.appx.set('port', process.env.PORT || port || 3000);
     Vue.appx.listen(port, ip, cb)
   }
+}
+
+/**
+ * Multiple objects into one
+ * @param objs Objects array
+ */
+function uniqueObject(objs: Object[]) {
+  return (() => {
+    let r = {};
+    objs.map(item => {
+      for (var key in item) if (item.hasOwnProperty(key)) r[key] = item[key]
+    })
+    return r;
+  })()
 }

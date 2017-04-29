@@ -9,10 +9,12 @@ import { VueController, Watch, Prop, Get, Del, Post, Put, Head } from '../../../
 })
 export class User extends Vue {
 
-  @Prop info: string = "Julian";
+  info: string = "Julian";
 
   created() {
     console.log("User mounted")
+
+    this.info = "Holaaaaa"
   }
 
   @Watch("info", { deep: true })
@@ -24,13 +26,15 @@ export class User extends Vue {
     path: '/data/:id'
   })
   getData(req: any, res, next) {
-    console.log("ID :", req.params)
+    console.log("ID :", req.params)    
+    console.log("Local:", req.locals);
+    // req.local = "Holaaaaa"
     return res.send("Hello, I am a controller TS")
   }
 
   @Get('list')
   getList(req: any, res, next) {
-    console.log("ID :", req.params)
+    console.log("Listado de users:", req.params)
     return res.json([{ name: 'David' }])
   }
 
@@ -38,13 +42,13 @@ export class User extends Vue {
     path: '/info/:data',
   })
   getInfo(req: any, res, next) {
-    console.log("ID :", req.params)
+    console.log("Get info data:", req.params)
     return res.send("Hello, I am a controller TS")
   }
 
   @Post({})
   getPost(req: any, res, next) {
-    console.log("ID :", req.params)
+    console.log("Un post:", req.params)
     return res.send("Request Post :)")
   }
 }

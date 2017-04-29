@@ -3,7 +3,7 @@
 import { IExpress } from "./interfaces/express";
 import * as cf from './constants/request_classifier';
 
-export default (_api, router: IExpress): any => {
+function createRoute(_api, router: IExpress) {
   // console.log("entro:=>", _api);
 
   if (!!_api) {
@@ -11,11 +11,11 @@ export default (_api, router: IExpress): any => {
       var func = _api[key];
       switch (cf.classifier(key)) {
         case cf.TYPES.GET:
-          console.log("Listen get", cf.clean(key));          
+          console.log("Listen get", cf.clean(key));
           router.get(cf.clean(key), func)
           break;
         case cf.TYPES.POST:
-          console.log("Listen post", cf.clean(key));          
+          console.log("Listen post", cf.clean(key));
           router.post(cf.clean(key), func)
           break;
         case cf.TYPES.PUT:
@@ -23,15 +23,18 @@ export default (_api, router: IExpress): any => {
           router.put(cf.clean(key), func)
           break;
         case cf.TYPES.HEAD:
-          console.log("Listen head", cf.clean(key));          
+          console.log("Listen head", cf.clean(key));
           router.head(cf.clean(key), func)
           break;
         case cf.TYPES.ALL:
-          console.log("Listen all", cf.clean(key));          
+          console.log("Listen all", cf.clean(key));
           router.all(cf.clean(key), func)
           break;
-      }    
+      }
     }
   }
   return router;
 }
+
+
+export default createRoute

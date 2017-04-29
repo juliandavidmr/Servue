@@ -1,5 +1,0 @@
-export { VueController } from './controller'
-export { Module } from './module'
-export { Prop } from './prop'
-export { Get, Del, Head, Post, Put } from './request/index'
-export { Watch, WatchOption } from './watch'
