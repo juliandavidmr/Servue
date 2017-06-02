@@ -1,5 +1,7 @@
 # Servue
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/juliandavidmr/Servue.svg)](https://greenkeeper.io/)
+
 > A reactive backend that implements the best of javascript, such as VueJS, SocketIO, _and Redux?_
 
 - [x] Routes
